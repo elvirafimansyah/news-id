@@ -14,10 +14,10 @@ window.addEventListener("load",  () => {
 }); 
 
 
-// Navbar Fixed Top
+// Search button to top
 document.addEventListener("scroll", function () {
   const scroll_top = document.querySelector('.scroll-top');
-  if (this.body.scrollTop > 1 || this.documentElement.scrollTop > 1) {
+  if (this.body.scrollTop > 0 || this.documentElement.scrollTop > 0) {
     scroll_top.classList.remove('hidden');
   } else {
     scroll_top.classList.add('hidden')  
@@ -116,16 +116,78 @@ async function allData() {
   const dataKumparan = await respKumparan.json();
   const kumparannews = await dataKumparan.data;
 
+  // Source: suara new
+  const respSuara = await fetch("https://berita-indo-api.vercel.app/v1/suara");
+  const dataSuara = await respSuara.json();
+  const suaranews = await dataSuara.data;
 
-  const all_news = [...news, ...voanews, ...randomnews, ...okezonenews, ...republikanews, ...kumparannews]; //count: 250 data
+  // Source: Antara News
+  // category: terkini 
+  const antaraTerkini = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/terkini")
+  const dataAntaraTerkini = await antaraTerkini.json();
+  const antaraTerkininews = await dataAntaraTerkini.data;
+  // Category: top-news
+  const antaraTop =await fetch("https://berita-indo-api.vercel.app/v1/antara-news/top-news");
+  const dataAntaraTop = await antaraTop.json();
+  const antaraTopnews = await dataAntaraTop.data; 
+  // Category: politik
+  const antaraPolitik = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/politik");
+  const dataAntaraPolitik = await antaraPolitik.json();
+  const antaraPolitiknews = await dataAntaraPolitik.data;
+  // Category: hukum
+  const antaraHukum = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/hukum");
+  const dataAntaraHukum = await antaraHukum.json();
+  const antaraHukumnews = await dataAntaraHukum.data;
+  // Category: ekonomi
+  const antaraEkonomi = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/ekonomi");
+  const dataAntaraEkonomi = await antaraEkonomi.json();
+  const antaraEkonominews = await dataAntaraEkonomi.data;
+  // Category: metro
+  const antaraMetro = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/metro");
+  const dataAntaraMetro = await antaraMetro.json();
+  const antaraMetronews = await dataAntaraMetro.data;
+  // Category: olahraga
+  const antaraOlahraga = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/olahraga");
+  const dataAntaraOlahraga = await antaraOlahraga.json();
+  const antaraOlahraganews = await dataAntaraOlahraga.data;
+  // Category: lifestyle  
+  const antaraStyle = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/lifestyle");
+  const dataAntaraStyle = await antaraStyle.json();
+  const antaraStylenews = await dataAntaraStyle.data;
+  // Category: hiburan
+  const antaraHiburan = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/hiburan");
+  const dataAntaraHiburan = await antaraHiburan.json();
+  const antaraHiburannews = await dataAntaraHiburan.data;
+  // Category: dunia
+  const antaraDunia = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/dunia");
+  const dataAntaraDunia = await antaraDunia.json();
+  const antaraDunianews = await dataAntaraDunia.data
+  // Category: teknologi
+  const antaraTekno = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/tekno");
+  const dataAntaraTekno = await antaraTekno.json();
+  const antaraTeknonews = await dataAntaraTekno.data;
+
+  const antaraNews = [...antaraMetronews, ...antaraEkonominews, ...antaraHukumnews, ...antaraPolitiknews, ...antaraTopnews, ...antaraTerkininews, antaraOlahraganews, ...antaraStylenews, ...antaraHiburannews, ...antaraDunianews, ...antaraTeknonews];
+
+  const all_news = [...news, ...voanews, ...randomnews, ...okezonenews, ...republikanews, ...kumparannews, ...suaranews, ...antaraNews]; //total: 493 data
 
   // loop every data into the card
+
+  antaraNews.forEach(berita => all_card += templateAntara(berita));
   okezonenews.forEach(berita => all_card += templateOkezone(berita));
   kumparannews.forEach(berita => all_card += templateKumparan(berita));
   news.forEach(berita => all_card += templateCard(berita));
   voanews.forEach(berita => all_card += templateVoa(berita));
   randomnews.forEach(berita => all_card += templateRandom(berita));
   republikanews.forEach(berita => all_card += templateVoa(berita));
+  suaranews.forEach(berita => all_card += templateSuara(berita));
+  
+  // antaraMetronews.forEach(berita => all_card += templateAntara(berita));
+  // antaraEkonominews.forEach(berita => all_card += templateAntara(berita));
+  // antaraHukumnews.forEach(berita => all_card += templateAntara(berita));
+  // antaraPolitiknews.forEach(berita => all_card += templateAntara(berita));
+  // antaraTopnews.forEach(berita => all_card += templateAntara(berita));
+  // antaraTerkininews.forEach(berita => all_card += templateAntara(berita));
 
   // display card
   container.innerHTML = all_card;
@@ -321,6 +383,80 @@ function templateKumparan(data) {
   `
 };
 
+function templateSuara(data) {
+  return ` 
+    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
+      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+        
+        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
+          <div class="md:flex-shrink-0">
+
+            <img src="${data.image.large}"
+              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
+          </div>
+        </a>
+        
+        <div class="py-1">
+          <div class="p-4">
+            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
+            <p class="break-words text-gray-700  mr-1">${data.contentSnippet}</p>
+          </div>
+
+          <div class="flex items-center justify-between p-4">
+            <div class="flex items-center">
+              <div class="text-base ">
+                <p class="text-black leading-none font-semibold"></p>
+                <p class="text-gray-700">${data.isoDate}</p>
+              </div>
+            </div>
+            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
+              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
+              Read More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+};
+
+function templateAntara(data) {
+  return ` 
+    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
+      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+        
+        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
+          <div class="md:flex-shrink-0">
+
+            <img src="${data.image}"
+              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
+          </div>
+        </a>
+        
+        <div class="py-1">
+          <div class="p-4">
+            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
+            <p class="break-words text-gray-700  mr-1">${data.description}</p>
+          </div>
+
+          <div class="flex items-center justify-between p-4">
+            <div class="flex items-center">
+              <div class="text-base ">
+                <p class="text-black leading-none font-semibold"></p>
+                <p class="text-gray-700">${data.isoDate}</p>
+              </div>
+            </div>
+            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
+              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
+              Read More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+};
+
 // Fixed Top, Progress bar
 let h=document.documentElement,
 b=document.body,
@@ -353,3 +489,5 @@ document.addEventListener("scroll", function() {
 );
 
 // api key : 49b7b991a17a485dbbc5e838e1271a4d
+
+
