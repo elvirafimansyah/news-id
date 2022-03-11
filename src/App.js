@@ -6,12 +6,21 @@ searchInput.addEventListener('input', async e => {
   const value = e.target.value;
   container.style.display = 'none';
   await dataRegion(value);
+
 })
 
 // Scroll Animation 
 window.addEventListener("load",  () => {
   document.querySelector('body').classList.add('loaded');  
 }); 
+
+
+const main_load = document.getElementById('load');
+main_load.classList.add("hidden");
+
+setTimeout(function () {
+  main_load.classList.remove('hidden')
+}, 2000)
 
 
 // Search button to top
@@ -24,64 +33,11 @@ document.addEventListener("scroll", function () {
   }
 });
 
-
-let kota = document.getElementById('region_news');
-async function dataRegion(region) {
-  // All news by region
-  let temp_card = '';
-  const respAllNews = await fetch('https://berita-indo-api.vercel.app/v1/tribun-news/' + region);
-  const dataAllnews= await respAllNews.json();
-  const allNews = await dataAllnews.data;
-
-  // Category: business
-  const respBisnis = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/bisnis");
-  const  dataBisnis = await respBisnis.json();
-  const bisnisNews = await dataBisnis.data;
-
-  // Category: sport
-  const respSport = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/sport");
-  const  dataSport = await respSport.json();
-  const sportNews = await dataSport.data;
-
-  // Category: seleb
-  const respSeleb = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region  + "/seleb");
-  const dataSeleb = await respSeleb.json();
-  const selebNews = await dataSeleb.data;
-
-  // Category: lifestyle
-  const respStyle = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/lifestyle");
-  const dataStyle = await respStyle.json();
-  const styleNews = await dataStyle.data;
-
-  // Category: travel 
-  const respTravel = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/travel");
-  const dataTravel = await respTravel.json();
-  const travelNews = await dataTravel.data;
-
-  // Category: otomotif
-  const respOtomotif = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/otomotif");
-  const dataOtomotif = await respOtomotif.json();
-  const ootmotifNews = await dataOtomotif.data;
-
-  // Category: technology
-  const respTech = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/techno");
-  const  dataTech = await respTech.json();
-  const techNews = await dataTech.data; 
-
-  // merge arrays into one
-  const all_category = [...selebNews, ...bisnisNews, ...sportNews, ...styleNews, ...travelNews, ...techNews,...ootmotifNews]; 
-
-
-  allNews.forEach(berita => temp_card += templateCard(berita));
-  all_category.forEach(berita => temp_card += templateCard(berita));
-
-
-  // all_category.forEach(berita => temp_card += templateCard(berita));
-
-  kota.innerHTML = temp_card;
-  title.innerHTML =  dataAllnews.messages;
-};
-
+// Display all news as default
+document.addEventListener('DOMContentLoaded', async () => {
+  await allData();
+  main_load.classList.add('hidden');
+});
 
 // Get All data by fetch
 async function allData() {
@@ -166,38 +122,102 @@ async function allData() {
   const antaraTekno = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/tekno");
   const dataAntaraTekno = await antaraTekno.json();
   const antaraTeknonews = await dataAntaraTekno.data;
+  // Category: otomotif 
+  const antaraOtomotif = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/otomotif");
+  const dataAntaraOtomotif = await antaraOtomotif.json();
+  const antaraOtomotifnews = await dataAntaraOtomotif.data;
+  // Category warta-bumi 
+  const antaraWarta = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/warta-bumi");
+  const dataAntaraWarta = await antaraWarta.json();
+  const antaraWartanews = await dataAntaraWarta.data;
+  // Category: rilis pers
+  const antaraPers = await fetch("https://berita-indo-api.vercel.app/v1/antara-news/rilis-pers");
+  const dataAntaraPers = await antaraPers.json();
+  const antaraPersnews = await dataAntaraPers.data;
 
-  const antaraNews = [...antaraMetronews, ...antaraEkonominews, ...antaraHukumnews, ...antaraPolitiknews, ...antaraTopnews, ...antaraTerkininews, antaraOlahraganews, ...antaraStylenews, ...antaraHiburannews, ...antaraDunianews, ...antaraTeknonews];
+  // Source: Vice news 
+  const respVice = await fetch("https://berita-indo-api.vercel.app/v1/vice");
+  const dataVice = await respVice.json();
+  const vicenews = await dataVice.data;
+  
+  const antaraNews = [...antaraMetronews, ...antaraEkonominews, ...antaraHukumnews, ...antaraPolitiknews, ...antaraTopnews, ...antaraTerkininews, antaraOlahraganews, ...antaraStylenews, ...antaraHiburannews, ...antaraDunianews, ...antaraTeknonews, ...antaraOtomotifnews, ...antaraWartanews, ...antaraPersnews];
 
-  const all_news = [...news, ...voanews, ...randomnews, ...okezonenews, ...republikanews, ...kumparannews, ...suaranews, ...antaraNews]; //total: 493 data
+  const all_news = [...news, ...voanews, ...randomnews, ...okezonenews, ...republikanews, ...kumparannews, ...suaranews, ...antaraNews, ...vicenews]; //total: 568 data
+
+  console.log(all_news)
 
   // loop every data into the card
-
-  antaraNews.forEach(berita => all_card += templateAntara(berita));
   okezonenews.forEach(berita => all_card += templateOkezone(berita));
   kumparannews.forEach(berita => all_card += templateKumparan(berita));
   news.forEach(berita => all_card += templateCard(berita));
   voanews.forEach(berita => all_card += templateVoa(berita));
+  antaraNews.forEach(berita => all_card += templateAntara(berita));
   randomnews.forEach(berita => all_card += templateRandom(berita));
   republikanews.forEach(berita => all_card += templateVoa(berita));
   suaranews.forEach(berita => all_card += templateSuara(berita));
+  vicenews.forEach(berita => all_card += templateVice(berita));
   
-  // antaraMetronews.forEach(berita => all_card += templateAntara(berita));
-  // antaraEkonominews.forEach(berita => all_card += templateAntara(berita));
-  // antaraHukumnews.forEach(berita => all_card += templateAntara(berita));
-  // antaraPolitiknews.forEach(berita => all_card += templateAntara(berita));
-  // antaraTopnews.forEach(berita => all_card += templateAntara(berita));
-  // antaraTerkininews.forEach(berita => all_card += templateAntara(berita));
-
   // display card
   container.innerHTML = all_card;
   title.innerHTML =  "Result of all news";
 };
 
-// Display all news as default
-document.addEventListener('DOMContentLoaded', async () => {
-  await allData();
-});
+let kota = document.getElementById('region_news');
+async function dataRegion(region) {
+  // All news by region
+  let temp_card = '';
+  const respAllNews = await fetch('https://berita-indo-api.vercel.app/v1/tribun-news/' + region);
+  const dataAllnews= await respAllNews.json();
+  const allNews = await dataAllnews.data;
+
+  // Category: business
+  const respBisnis = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/bisnis");
+  const  dataBisnis = await respBisnis.json();
+  const bisnisNews = await dataBisnis.data;
+
+  // Category: sport
+  const respSport = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/sport");
+  const  dataSport = await respSport.json();
+  const sportNews = await dataSport.data;
+
+  // Category: seleb
+  const respSeleb = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region  + "/seleb");
+  const dataSeleb = await respSeleb.json();
+  const selebNews = await dataSeleb.data;
+
+  // Category: lifestyle
+  const respStyle = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/lifestyle");
+  const dataStyle = await respStyle.json();
+  const styleNews = await dataStyle.data;
+
+  // Category: travel 
+  const respTravel = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/travel");
+  const dataTravel = await respTravel.json();
+  const travelNews = await dataTravel.data;
+
+  // Category: otomotif
+  const respOtomotif = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/otomotif");
+  const dataOtomotif = await respOtomotif.json();
+  const ootmotifNews = await dataOtomotif.data;
+
+  // Category: technology
+  const respTech = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/techno");
+  const  dataTech = await respTech.json();
+  const techNews = await dataTech.data; 
+
+  // merge arrays into one
+  const all_category = [...selebNews, ...bisnisNews, ...sportNews, ...styleNews, ...travelNews, ...techNews,...ootmotifNews]; 
+
+  allNews.forEach(berita => temp_card += templateCard(berita));
+  all_category.forEach(berita => temp_card += templateCard(berita));
+
+  kota.innerHTML = temp_card;
+  title.innerHTML =  dataAllnews.messages;
+};
+
+
+
+
 
 // Template Card News
 function templateCard(data) {
@@ -457,6 +477,43 @@ function templateAntara(data) {
   `
 };
 
+function templateVice(data) {
+  return `
+    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
+      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+        
+        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
+          <div class="md:flex-shrink-0">
+
+            <img src="${data.image.small}"
+              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
+          </div>
+        </a>
+        
+        <div class="py-1">
+          <div class="p-4">
+            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
+            <p class="break-words text-gray-700  mr-1">${data.content}</p>
+          </div>
+
+          <div class="flex items-center justify-between p-4">
+            <div class="flex items-center">
+              <div class="text-base ">
+                <p class="text-gray-700">${data.isoDate}</p>
+              </div>
+            </div>
+            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
+              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
+              Read More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+};
+
+
 // Fixed Top, Progress bar
 let h=document.documentElement,
 b=document.body,
@@ -464,11 +521,9 @@ st="scrollTop",
 sh="scrollHeight",
 progress=document.querySelector("#progress"),
 scroll;
-
 let scrollpos=window.scrollY;
 let header=document.getElementById("header");
 let navcontent=document.getElementById("nav-content");
-
 document.addEventListener("scroll", function() {
     scroll=(h[st]||b[st])/((h[sh]||b[sh])-h.clientHeight)*100;
     progress.style.setProperty("--scroll", scroll+"%");
@@ -489,5 +544,17 @@ document.addEventListener("scroll", function() {
 );
 
 // api key : 49b7b991a17a485dbbc5e838e1271a4d
+const main_refresh = document.querySelector('.refresh-button');
+const showRefresh = () => {
+  const refreshHTML = `
+    <button class="bg-green-500 text-white p-2 rounded shadow-md font-medium refresh mb-10"><i class="fa-solid fa-arrows-rotate  "></i> Refresh</button>
+  `
+  main_refresh.innerHTML = refreshHTML;
 
+  const refreshBtn = document.querySelector('.refresh')
+  refreshBtn.addEventListener('click', () => {
+    window.location.reload();
+  });
+} 
 
+setTimeout(showRefresh, 40000)
