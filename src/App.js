@@ -109,10 +109,6 @@ async function allData() {
   const dataVoa = await respVoa.json();
   const voanews = await dataVoa.data;
 
-  const respRandom = await fetch('https://newsapi.org/v2/top-headlines?country=id&apiKey=49b7b991a17a485dbbc5e838e1271a4d');
-  const dataRandom = await respRandom.json();
-  const randomnews = await dataRandom.articles;
-
   // Source: Okezone news
   const respOkezone = await fetch('https://berita-indo-api.vercel.app/v1/okezone-news');
   const dataOkezone = await respOkezone.json();
@@ -228,7 +224,6 @@ async function allData() {
       news.forEach(berita => all_card += templateCard(berita));
       voanews.forEach(berita => all_card += templateVoa(berita));
       antaraNews.forEach(berita => all_card += templateAntara(berita));
-      randomnews.forEach(berita => all_card += templateRandom(berita));
       republikanews.forEach(berita => all_card += templateVoa(berita));
       suaranews.forEach(berita => all_card += templateSuara(berita));
       vicenews.forEach(berita => all_card += templateVice(berita));
@@ -250,7 +245,6 @@ async function dataRegion(region) {
   const dataAllnews= await respAllNews.json();
   const allNews = await dataAllnews.data;
 
-  console.log(allNews)
   // Category: business
   const respBisnis = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/bisnis");
   const  dataBisnis = await respBisnis.json();
