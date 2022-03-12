@@ -6,7 +6,7 @@ searchInput.addEventListener('input', async e => {
   const value = e.target.value;
   container.style.display = 'none';
   await dataRegion(value);
-
+  main_load.classList.add('hidden');
 })
 
 // Scroll Animation 
@@ -14,14 +14,12 @@ window.addEventListener("load",  () => {
   document.querySelector('body').classList.add('loaded');  
 }); 
 
-
 const main_load = document.getElementById('load');
 main_load.classList.add("hidden");
 
 setTimeout(function () {
   main_load.classList.remove('hidden')
 }, 2000)
-
 
 // Search button to top
 document.addEventListener("scroll", function () {
@@ -67,7 +65,7 @@ async function allData() {
   const dataRepublika = await respRepublika.json();
   const republikanews = await dataRepublika.data;
 
-  // Source: tempo news
+  // Source: kumparan news
   const respKumparan = await fetch("https://berita-indo-api.vercel.app/v1/kumparan-news");
   const dataKumparan = await respKumparan.json();
   const kumparannews = await dataKumparan.data;
@@ -144,22 +142,46 @@ async function allData() {
 
   const all_news = [...news, ...voanews, ...randomnews, ...okezonenews, ...republikanews, ...kumparannews, ...suaranews, ...antaraNews, ...vicenews]; //total: 568 data
 
-  console.log(all_news)
-
   // loop every data into the card
   okezonenews.forEach(berita => all_card += templateOkezone(berita));
-  kumparannews.forEach(berita => all_card += templateKumparan(berita));
-  news.forEach(berita => all_card += templateCard(berita));
-  voanews.forEach(berita => all_card += templateVoa(berita));
-  antaraNews.forEach(berita => all_card += templateAntara(berita));
-  randomnews.forEach(berita => all_card += templateRandom(berita));
-  republikanews.forEach(berita => all_card += templateVoa(berita));
-  suaranews.forEach(berita => all_card += templateSuara(berita));
-  vicenews.forEach(berita => all_card += templateVice(berita));
   
   // display card
   container.innerHTML = all_card;
   title.innerHTML =  "Result of all news";
+
+  const main_refresh = document.querySelector('.refresh-button');
+  const showButton = () => {
+    const refreshHTML = `
+      <button class="bg-green-500 text-white p-2 rounded shadow-md font-medium load-btn mb-10">Load More</button>
+      <button class="bg-green-500 text-white p-2 rounded shadow-md font-medium refresh mb-10"><i class="fa-solid fa-arrows-rotate  "></i> Refresh</button>
+    `
+    main_refresh.innerHTML = refreshHTML;
+
+    const refreshBtn = document.querySelector('.refresh')
+    refreshBtn.addEventListener('click', () => {
+      window.location.reload();
+    });
+
+    const loadBtn = document.querySelector('.load-btn');
+    loadBtn.addEventListener('click', () => {
+      news.forEach(berita => all_card += templateCard(berita));
+      kumparannews.forEach(berita => all_card += templateKumparan(berita));
+      news.forEach(berita => all_card += templateCard(berita));
+      voanews.forEach(berita => all_card += templateVoa(berita));
+      antaraNews.forEach(berita => all_card += templateAntara(berita));
+      randomnews.forEach(berita => all_card += templateRandom(berita));
+      republikanews.forEach(berita => all_card += templateVoa(berita));
+      suaranews.forEach(berita => all_card += templateSuara(berita));
+      vicenews.forEach(berita => all_card += templateVice(berita));
+
+      container.innerHTML = all_card;
+
+      loadBtn.disabled  = true;
+      loadBtn.style.display = "none";
+    });
+  } 
+
+  showButton();
 };
 
 let kota = document.getElementById('region_news');
@@ -170,12 +192,13 @@ async function dataRegion(region) {
   const dataAllnews= await respAllNews.json();
   const allNews = await dataAllnews.data;
 
+  console.log(allNews)
   // Category: business
   const respBisnis = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/bisnis");
   const  dataBisnis = await respBisnis.json();
   const bisnisNews = await dataBisnis.data;
 
-  // Category: sport
+  //  Category: sport
   const respSport = await fetch("https://berita-indo-api.vercel.app/v1/tribun-news/" + region + "/sport");
   const  dataSport = await respSport.json();
   const sportNews = await dataSport.data;
@@ -215,15 +238,11 @@ async function dataRegion(region) {
   title.innerHTML =  dataAllnews.messages;
 };
 
-
-
-
-
 // Template Card News
 function templateCard(data) {
   return `
     <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
         
         <a target="_blank" rel="noreferrer noopener" href="${data.link}">
           <div class="md:flex-shrink-0">
@@ -256,11 +275,10 @@ function templateCard(data) {
   `
 }
 
-
 function templateVoa(data) {
   return `
     <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
         
         <a target="_blank" rel="noreferrer noopener" href="${data.link}">
           <div class="md:flex-shrink-0">
@@ -296,7 +314,7 @@ function templateVoa(data) {
 function templateRandom(data) {
   return `
     <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
         
         <a target="_blank" rel="noreferrer noopener" href="${data.url}">
           <div class="md:flex-shrink-0">
@@ -332,7 +350,7 @@ function templateRandom(data) {
 function templateOkezone(data) {
   return `
     <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
         
         <a target="_blank" rel="noreferrer noopener" href="${data.link}">
           <div class="md:flex-shrink-0">
@@ -369,7 +387,7 @@ function templateOkezone(data) {
 function templateKumparan(data) {
   return `
     <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
         
         <a target="_blank" rel="noreferrer noopener" href="${data.link}">
           <div class="md:flex-shrink-0">
@@ -406,7 +424,7 @@ function templateKumparan(data) {
 function templateSuara(data) {
   return ` 
     <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
         
         <a target="_blank" rel="noreferrer noopener" href="${data.link}">
           <div class="md:flex-shrink-0">
@@ -443,7 +461,7 @@ function templateSuara(data) {
 function templateAntara(data) {
   return ` 
     <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
         
         <a target="_blank" rel="noreferrer noopener" href="${data.link}">
           <div class="md:flex-shrink-0">
@@ -480,7 +498,7 @@ function templateAntara(data) {
 function templateVice(data) {
   return `
     <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white md:shadow-xl rounded-lg mb-6 ">
+      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
         
         <a target="_blank" rel="noreferrer noopener" href="${data.link}">
           <div class="md:flex-shrink-0">
@@ -543,18 +561,28 @@ document.addEventListener("scroll", function() {
 }
 );
 
-// api key : 49b7b991a17a485dbbc5e838e1271a4d
-const main_refresh = document.querySelector('.refresh-button');
-const showRefresh = () => {
-  const refreshHTML = `
-    <button class="bg-green-500 text-white p-2 rounded shadow-md font-medium refresh mb-10"><i class="fa-solid fa-arrows-rotate  "></i> Refresh</button>
-  `
-  main_refresh.innerHTML = refreshHTML;
+// ========================= Smooth Scroll Jquery ========================= //  
+$(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
 
-  const refreshBtn = document.querySelector('.refresh')
-  refreshBtn.addEventListener('click', () => {
-    window.location.reload();
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 800, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
   });
-} 
-
-setTimeout(showRefresh, 40000)
+});
