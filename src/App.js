@@ -118,7 +118,6 @@ async function allData() {
   const dataOkezone = await respOkezone.json();
   const okezonenews = await dataOkezone.data;
 
-
   // Source: republika news
   const respRepublika = await fetch('https://berita-indo-api.vercel.app/v1/republika-news/');
   const dataRepublika = await respRepublika.json();
@@ -199,7 +198,8 @@ async function allData() {
   
   const antaraNews = [...antaraMetronews, ...antaraEkonominews, ...antaraHukumnews, ...antaraPolitiknews, ...antaraTopnews, ...antaraTerkininews, antaraOlahraganews, ...antaraStylenews, ...antaraHiburannews, ...antaraDunianews, ...antaraTeknonews, ...antaraOtomotifnews, ...antaraWartanews, ...antaraPersnews];
 
-  const all_news = [...news, ...voanews, ...randomnews, ...okezonenews, ...republikanews, ...kumparannews, ...suaranews, ...antaraNews, ...vicenews]; //total: 568 data
+  // const all_news = [...news, ...voanews, ...randomnews, ...okezonenews, ...republikanews, ...kumparannews, ...suaranews, ...antaraNews, ...vicenews]; 
+  //total: 568 data
 
   // loop every data into the card
   okezonenews.forEach(berita => all_card += templateOkezone(berita));
