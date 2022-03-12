@@ -1,3 +1,5 @@
+import { templateCard, templateAntara, templateKumparan, templateOkezone, templateRandom,templateSuara, templateVice, templateVoa } from './template.js'
+
 const container = document.getElementById('news'),
 searchInput = document.getElementById('search'),
 title = document.querySelector('.title')
@@ -35,6 +37,63 @@ document.addEventListener("scroll", function () {
 document.addEventListener('DOMContentLoaded', async () => {
   await allData();
   main_load.classList.add('hidden');
+});
+
+let kota = document.getElementById('region_news');
+
+// Fixed Top, Progress bar
+let h=document.documentElement,
+b=document.body,
+st="scrollTop",
+sh="scrollHeight",
+progress=document.querySelector("#progress"),
+scroll;
+let scrollpos=window.scrollY;
+let header=document.getElementById("header");
+let navcontent=document.getElementById("nav-content");
+document.addEventListener("scroll", function() {
+    scroll=(h[st]||b[st])/((h[sh]||b[sh])-h.clientHeight)*100;
+    progress.style.setProperty("--scroll", scroll+"%");
+    scrollpos=window.scrollY;
+    if(scrollpos>10) {
+        header.classList.add("bg-white");
+        header.classList.add("shadow-xl");
+        navcontent.classList.remove("bg-gray-50");
+        navcontent.classList.add("bg-white")
+    }
+    else {
+        header.classList.remove("bg-white");
+        header.classList.remove("shadow-xl");
+        navcontent.classList.remove("bg-white");
+        navcontent.classList.add("bg-gray-50")
+    }
+}
+);
+
+// ========================= Smooth Scroll Jquery ========================= //  
+$(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 800, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
 });
 
 // Get All data by fetch
@@ -184,7 +243,6 @@ async function allData() {
   showButton();
 };
 
-let kota = document.getElementById('region_news');
 async function dataRegion(region) {
   // All news by region
   let temp_card = '';
@@ -237,352 +295,3 @@ async function dataRegion(region) {
   kota.innerHTML = temp_card;
   title.innerHTML =  dataAllnews.messages;
 };
-
-// Template Card News
-function templateCard(data) {
-  return `
-    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
-        
-        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
-          <div class="md:flex-shrink-0">
-
-            <img src="${data.image}"
-              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
-          </div>
-        </a>
-        
-        <div class="py-1">
-          <div class="p-4">
-            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
-            <p class="break-words text-gray-700  mr-1">${data.contentSnippet}</p>
-          </div>
-
-          <div class="flex items-center justify-between p-4">
-            <div class="flex items-center">
-              <div class="text-base ">
-                <p class="text-gray-700">${data.isoDate}</p>
-              </div>
-            </div>
-            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
-              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-}
-
-function templateVoa(data) {
-  return `
-    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
-        
-        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
-          <div class="md:flex-shrink-0">
-
-            <img src="${data.image.small}"
-              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
-          </div>
-        </a>
-        
-        <div class="py-1">
-          <div class="p-4">
-            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
-            <p class="break-words text-gray-700  mr-1">${data.description}</p>
-          </div>
-
-          <div class="flex items-center justify-between p-4">
-            <div class="flex items-center">
-              <div class="text-base ">
-                <p class="text-gray-700">${data.isoDate}</p>
-              </div>
-            </div>
-            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
-              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-};
-
-function templateRandom(data) {
-  return `
-    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
-        
-        <a target="_blank" rel="noreferrer noopener" href="${data.url}">
-          <div class="md:flex-shrink-0">
-
-            <img src="${data.urlToImage}"
-              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
-          </div>
-        </a>
-        
-        <div class="py-1">
-          <div class="p-4">
-            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
-            <p class="break-words text-gray-700  mr-1">${data.description}</p>
-          </div>
-
-          <div class="flex items-center justify-between p-4">
-            <div class="flex items-center">
-              <div class="text-base ">
-                <p class="text-gray-700">${data.publishedAt}</p>
-              </div>
-            </div>
-            <a target="_blank" rel="noreferrer noopener" href="${data.url}"
-              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-}
-
-function templateOkezone(data) {
-  return `
-    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
-        
-        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
-          <div class="md:flex-shrink-0">
-
-            <img src="${data.image.large}"
-              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
-          </div>
-        </a>
-        
-        <div class="py-1">
-          <div class="p-4">
-            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
-            <p class="break-words text-gray-700  mr-1">${data.content}</p>
-          </div>
-
-          <div class="flex items-center justify-between p-4">
-            <div class="flex items-center">
-              <div class="text-base ">
-                <p class="text-black leading-none font-semibold">${data.categories}</p>
-                <p class="text-gray-700">${data.isoDate}</p>
-              </div>
-            </div>
-            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
-              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-};
-
-function templateKumparan(data) {
-  return `
-    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
-        
-        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
-          <div class="md:flex-shrink-0">
-
-            <img src="${data.image.large}"
-              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
-          </div>
-        </a>
-        
-        <div class="py-1">
-          <div class="p-4">
-            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
-            <p class="break-words text-gray-700  mr-1">${data.description}</p>
-          </div>
-
-          <div class="flex items-center justify-between p-4">
-            <div class="flex items-center">
-              <div class="text-base ">
-                <p class="text-black leading-none font-semibold">${data.categories}</p>
-                <p class="text-gray-700">${data.isoDate}</p>
-              </div>
-            </div>
-            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
-              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-};
-
-function templateSuara(data) {
-  return ` 
-    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
-        
-        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
-          <div class="md:flex-shrink-0">
-
-            <img src="${data.image.large}"
-              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
-          </div>
-        </a>
-        
-        <div class="py-1">
-          <div class="p-4">
-            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
-            <p class="break-words text-gray-700  mr-1">${data.contentSnippet}</p>
-          </div>
-
-          <div class="flex items-center justify-between p-4">
-            <div class="flex items-center">
-              <div class="text-base ">
-                <p class="text-black leading-none font-semibold"></p>
-                <p class="text-gray-700">${data.isoDate}</p>
-              </div>
-            </div>
-            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
-              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-};
-
-function templateAntara(data) {
-  return ` 
-    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
-        
-        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
-          <div class="md:flex-shrink-0">
-
-            <img src="${data.image}"
-              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
-          </div>
-        </a>
-        
-        <div class="py-1">
-          <div class="p-4">
-            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
-            <p class="break-words text-gray-700  mr-1">${data.description}</p>
-          </div>
-
-          <div class="flex items-center justify-between p-4">
-            <div class="flex items-center">
-              <div class="text-base ">
-                <p class="text-black leading-none font-semibold"></p>
-                <p class="text-gray-700">${data.isoDate}</p>
-              </div>
-            </div>
-            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
-              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-};
-
-function templateVice(data) {
-  return `
-    <div class="mx-auto px-4 py-4 max-w-xl my-auto">
-      <div class="bg-gray-50 md:bg-white shadow-xl rounded-lg mb-6 ">
-        
-        <a target="_blank" rel="noreferrer noopener" href="${data.link}">
-          <div class="md:flex-shrink-0">
-
-            <img src="${data.image.small}"
-              class="object-cover h-full w-full rounded-lg rounded-b-none" alt="tidak ada">
-          </div>
-        </a>
-        
-        <div class="py-1">
-          <div class="p-4">
-            <h2 class=" font-bold mb-2  text-2xl text-gray-800 tracking-normal">${data.title}</h2>
-            <p class="break-words text-gray-700  mr-1">${data.content}</p>
-          </div>
-
-          <div class="flex items-center justify-between p-4">
-            <div class="flex items-center">
-              <div class="text-base ">
-                <p class="text-gray-700">${data.isoDate}</p>
-              </div>
-            </div>
-            <a target="_blank" rel="noreferrer noopener" href="${data.link}"
-              class="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-};
-
-
-// Fixed Top, Progress bar
-let h=document.documentElement,
-b=document.body,
-st="scrollTop",
-sh="scrollHeight",
-progress=document.querySelector("#progress"),
-scroll;
-let scrollpos=window.scrollY;
-let header=document.getElementById("header");
-let navcontent=document.getElementById("nav-content");
-document.addEventListener("scroll", function() {
-    scroll=(h[st]||b[st])/((h[sh]||b[sh])-h.clientHeight)*100;
-    progress.style.setProperty("--scroll", scroll+"%");
-    scrollpos=window.scrollY;
-    if(scrollpos>10) {
-        header.classList.add("bg-white");
-        header.classList.add("shadow-xl");
-        navcontent.classList.remove("bg-gray-50");
-        navcontent.classList.add("bg-white")
-    }
-    else {
-        header.classList.remove("bg-white");
-        header.classList.remove("shadow-xl");
-        navcontent.classList.remove("bg-white");
-        navcontent.classList.add("bg-gray-50")
-    }
-}
-);
-
-// ========================= Smooth Scroll Jquery ========================= //  
-$(document).ready(function(){
-  // Add smooth scrolling to all links
-  $("a").on('click', function(event) {
-
-    // Make sure this.hash has a value before overriding default behavior
-    if (this.hash !== "") {
-      // Prevent default anchor click behavior
-      event.preventDefault();
-
-      // Store hash
-      var hash = this.hash;
-
-      // Using jQuery's animate() method to add smooth page scroll
-      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top
-      }, 800, function(){
-
-        // Add hash (#) to URL when done scrolling (default click behavior)
-        window.location.hash = hash;
-      });
-    } // End if
-  });
-});
